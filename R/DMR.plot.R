@@ -1,3 +1,4 @@
+
 DMR.plot <- function(ranges, dmr, CpGs, what=c("Beta", "M"), arraytype=c("EPIC", "450K"), phen.col, genome = c("hg19", "hg38", "mm10"), samps = NULL, ...)
 
 {
@@ -52,7 +53,7 @@ DMR.plot <- function(ranges, dmr, CpGs, what=c("Beta", "M"), arraytype=c("EPIC",
   dt.group <- lapply(unique(names(phen.col)), function(i)
         DataTrack(methRatios[,names(phen.col) %in% i], name=i, background.title=phen.col[i],
                   type="heatmap", showSampleNames=TRUE, ylim=c(0, 1), genome=genome,
-                  gradient=c("blue", "white", "red")))
+                  gradient=c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")))
  
   dt.group <- c(dt.group, list(DataTrack(methRatios, groups=names(phen.col), type="b",
                                              aggregateGroups=TRUE, col=phen.col[sort(group)], ylim=c(0, 1), name="Group means")))
@@ -62,7 +63,7 @@ DMR.plot <- function(ranges, dmr, CpGs, what=c("Beta", "M"), arraytype=c("EPIC",
          hg38={tx=env$tx.hg38},
          mm10={tx=env$tx.mm10}
   )
-  extras <- list(AnnotationTrack(dmrs.inplot, name="DMRs", showFeatureId=TRUE, col=NULL, fill="purple", id=dmrs.inplot$ID, 
+  extras <- list(AnnotationTrack(dmrs.inplot, name="DMRs", showFeatureId=TRUE, col=NULL, fill="black", id=dmrs.inplot$ID, 
                                  fontcolor="black"))
   #extras <- endoapply(extras, function(x) {
   #  chromosome(x) <- as.character(seqnames(methRatios[dmr]))
@@ -73,6 +74,7 @@ DMR.plot <- function(ranges, dmr, CpGs, what=c("Beta", "M"), arraytype=c("EPIC",
                        GenomeAxisTrack(),
                        GeneRegionTrack(subsetByOverlaps(tx, ranges.inplot), name = "Gene", showId=TRUE, geneSymbol=TRUE, symbol = subsetByOverlaps(tx, ranges.inplot)$gene_name, col=NULL, fill="lightblue", transcriptAnnotation = "symbol", shape="arrow"),
                        AnnotationTrack(cpgs.ranges, name="CpGs", fill="green", col=NULL, stacking="dense"))
+    print(length(c(basetracks, extras, dt.group)));
     plotTracks(c(basetracks, extras, dt.group), from=start(ranges.inplot), to=end(ranges.inplot), ...)
   }
   
